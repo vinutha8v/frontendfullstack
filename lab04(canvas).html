@@ -1,0 +1,119 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Canvas Drawing App</title>
+    <style>
+        body {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            background-color: #f0f0f0;
+            flex-direction: column;
+            font-family: Arial, sans-serif;
+            color: #333;
+        }
+        canvas {
+            border: 1px solid #000;
+            margin-bottom: 20px;
+        }
+        h1 {
+            text-align: center;
+            font-size: 36px;
+            color: #009688;
+            margin: 0;
+        }
+        p {
+            font-size: 18px;
+            text-align: center;
+            margin: 20px;
+        }
+        .brush-options {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+        .brush-options label {
+            font-size: 16px;
+            margin: 0 10px;
+        }
+        .brush-options input[type="color"] {
+            width: 30px;
+            height: 30px;
+            padding: 0;
+            border: none;
+            border-radius: 50%;
+            cursor: pointer;
+        }
+    </style>
+</head>
+<body>
+    <h1>Canvas Drawing App</h1>
+    <p>This is a simple canvas drawing app. Click and drag your mouse on the canvas to draw.</p>
+    <canvas id="canvas" width="500" height="500"></canvas>
+    <div class="brush-options">
+        <label for="brush-size">Brush Size:</label>
+        <input type="number" id="brush-size" value="2" min="1" max="20">
+        <label for="brush-color">Brush Color:</label>
+        <input type="color" id="brush-color" value="#000000">
+    </div>
+    <script>
+        document.addEventListener("DOMContentLoaded", function () {
+            const canvas = document.getElementById("canvas");
+            const context = canvas.getContext("2d");
+
+            let isDrawing = false;
+            let x = 0;
+            let y = 0;
+            let brushSize = 2;
+            let brushColor = "#000000";
+
+            canvas.addEventListener("mousedown", (e) => {
+                isDrawing = true;
+                x = e.offsetX;
+                y = e.offsetY;
+            });
+
+            canvas.addEventListener("mousemove", (e) => {
+                if (isDrawing) {
+                    drawLine(context, x, y, e.offsetX, e.offsetY);
+                    x = e.offsetX;
+                    y = e.offsetY;
+                }
+            });
+
+            canvas.addEventListener("mouseup", () => {
+                isDrawing = false;
+            });
+
+            canvas.addEventListener("mouseout", () => {
+                isDrawing = false;
+            });
+
+            function drawLine(context, x1, y1, x2, y2) {
+                context.beginPath();
+                context.strokeStyle = brushColor; // color of the line
+                context.lineWidth = brushSize; // thickness of the line
+                context.moveTo(x1, y1);
+                context.lineTo(x2, y2);
+                context.stroke();
+                context.closePath();
+            }
+
+            // Brush size input
+            const brushSizeInput = document.getElementById("brush-size");
+            brushSizeInput.addEventListener("change", (e) => {
+                brushSize = parseInt(e.target.value);
+            });
+
+            // Brush color input
+            const brushColorInput = document.getElementById("brush-color");
+            brushColorInput.addEventListener("change", (e) => {
+                brushColor = e.target.value;
+            });
+        });
+    </script>
+</body>
+</html>
